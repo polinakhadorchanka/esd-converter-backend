@@ -58,4 +58,5 @@ function getTypeFromArrayBuffer(arrayBuffer: ArrayBuffer) {
   }
 }
 
+export {};
 module.exports = { arraybufferToString, arraybufferToBase64, getTypeFromArrayBuffer };

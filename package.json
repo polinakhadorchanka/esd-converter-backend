@@ -9,7 +9,7 @@
     "dev": "ts-node-dev --no-notify --exit-child -r dotenv/config app.ts",
     "watch-ts": "tsc -w",
     "format:check": "prettier --check .",
-    "format:write": "prettier --write .",
+    "format:write": "prettier --write ."
   },
   "dependencies": {
     "archiver": "^7.0.1",
