@@ -1,0 +1,34 @@
+{
+  "name": "esd-converter-backend",
+  "description": "ESD converter for DIRECTUM",
+  "author": "polinakhadorchanka",
+  "version": "1.0.0",
+  "main": "app.ts",
+  "scripts": {
+    "start": "ts-node -r dotenv/config app.ts",
+    "dev": "ts-node-dev --no-notify --exit-child -r dotenv/config app.ts",
+    "watch-ts": "tsc -w",
+    "format:check": "prettier --check .",
+    "format:write": "prettier --write .",
+  },
+  "dependencies": {
+    "archiver": "^7.0.1",
+    "body-parser": "^1.20.2",
+    "compression": "^1.7.4",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "fast-xml-parser": "^4.3.6",
+    "helmet": "^7.1.0",
+    "multer": "^1.4.5-lts.1",
+    "uuid": "^9.0.1"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/multer": "^1.4.11",
+    "prettier": "^3.2.5",
+    "ts-node": "^10.9.2",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.4.3"
+  }
+}

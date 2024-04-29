@@ -1,0 +1,20 @@
+# dependencies
+/node_modules
+
+# envs
+.env
+
+# logs
+package-lock.json
+yarn.lock
+
+# VSCode
+/.vscode
+
+# IDEA
+/.idea
+
+/dist
+/uploads
+*.log
+*.esd
