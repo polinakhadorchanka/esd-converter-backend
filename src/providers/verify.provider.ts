@@ -6,11 +6,10 @@ const { readFile, deleteFile } = require('../utils/file-processing.utils');
 const { createTempFileLink } = require('../utils/link.utils');
 
 async function verifyEDS(mainDocument: Express.Multer.File, signatures?: Express.Multer.File[]) {
-  const deleteFiles = () => {
+  const deleteFiles = (files: string[]) => {
     try {
-      deleteFile(mainDocument.path);
-      signatures?.forEach((signature) => {
-        deleteFile(signature.path);
+      files.forEach((file) => {
+        deleteFile(file);
       });
     } catch (error) {
       throw error;
@@ -19,10 +18,16 @@ async function verifyEDS(mainDocument: Express.Multer.File, signatures?: Express
 
   try {
     if (signatures) {
-      const signaturesData: Signature[] = signatures?.map((sign) => {
-        execAvCmUt4(mainDocument.path, sign.path);
+      const logFiles: string[] = [];
 
-        const logData = arraybufferToString(readFile(`AvCmUt4.log`)).toString().split('\n');
+      const signaturesData: Signature[] = signatures?.map((sign) => {
+        const logFilepath = execAvCmUt4(mainDocument.path, sign.path) ?? '';
+
+        logFiles.push(logFilepath as string);
+
+        const logData = arraybufferToString(readFile(logFilepath as string))
+          .toString()
+          .split('\n');
 
         const tmpDate = logData[9].split(': ')[1];
         const convertDate = tmpDate.split('.')[1] + '.' + tmpDate.split('.')[0] + '.' + tmpDate.split('.')[2];
@@ -44,7 +49,7 @@ async function verifyEDS(mainDocument: Express.Multer.File, signatures?: Express
         };
       });
 
-      deleteFiles();
+      deleteFiles([mainDocument.path, ...signatures.map((sign) => sign.path), ...logFiles]);
 
       return {
         signatures: signaturesData.map((signature) => {
@@ -57,9 +62,11 @@ async function verifyEDS(mainDocument: Express.Multer.File, signatures?: Express
         }),
       };
     } else {
-      execAvCmUt4(mainDocument.path);
+      const logFilepath = execAvCmUt4(mainDocument.path);
 
-      const logData = arraybufferToString(readFile(`AvCmUt4.log`)).toString().split('\n');
+      const logData = arraybufferToString(readFile(logFilepath as string))
+        .toString()
+        .split('\n');
 
       const tmpDate = logData[9].split(': ')[1];
       const convertDate = tmpDate.split('.')[1] + '.' + tmpDate.split('.')[0] + '.' + tmpDate.split('.')[2];
@@ -82,7 +89,7 @@ async function verifyEDS(mainDocument: Express.Multer.File, signatures?: Express
 
       const fileLink = createTempFileLink(process.env.STORAGE_PATH, 'txt', logData.join('\n'));
 
-      deleteFiles();
+      deleteFiles([mainDocument.path, logFilepath as string]);
 
       return {
         signatures: [signature],

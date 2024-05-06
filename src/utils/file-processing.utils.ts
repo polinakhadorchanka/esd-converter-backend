@@ -58,4 +58,5 @@ const isFileExists = (filepath: string) => {
   }
 };
 
+export {};
 module.exports = { readFile, copyFile, deleteFile, writeFile, writeTempFile, isFileExists };

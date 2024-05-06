@@ -9,7 +9,6 @@
     "rootDir": "./src",
     "useUnknownInCatchVariables": false,
     "lib": [
-      "decorators",
       "dom",
       "es5",
       "scripthost",

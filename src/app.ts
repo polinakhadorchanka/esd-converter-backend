@@ -5,8 +5,8 @@ const compression = require('compression');
 const helmet = require('helmet');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const { routes } = require('./src/routes');
-const { ERR_NOT_FOUND, getError } = require('./src/utils/error.utils');
+const { routes } = require('./routes');
+const { ERR_NOT_FOUND, getError } = require('./utils/error.utils');
 
 const PORT = process.env.PORT;
 

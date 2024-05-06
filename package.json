@@ -5,8 +5,9 @@
   "version": "1.0.0",
   "main": "app.ts",
   "scripts": {
-    "start": "ts-node -r dotenv/config app.ts",
-    "dev": "ts-node-dev --no-notify --exit-child -r dotenv/config app.ts",
+    "start": "node -r dotenv/config ./dist/app.js",
+    "dev": "ts-node-dev --no-notify --exit-child -r dotenv/config ./src/app.ts",
+    "build": "rimraf build && tsc -p tsconfig.json",
     "watch-ts": "tsc -w",
     "format:check": "prettier --check .",
     "format:write": "prettier --write ."
@@ -20,6 +21,7 @@
     "express": "^4.19.2",
     "fast-xml-parser": "^4.3.6",
     "helmet": "^7.1.0",
+    "log4js": "^6.9.1",
     "multer": "^1.4.5-lts.1",
     "uuid": "^9.0.1"
   },

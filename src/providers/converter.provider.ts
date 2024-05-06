@@ -7,11 +7,10 @@ const { createTempFileLink, createTempArchiveLink } = require('../utils/link.uti
 const { getESDContent, getContentFileFromESD, getSignatureFilesFromESD } = require('../utils/converter.utils');
 
 async function convertDocToESD(mainDocument: Express.Multer.File, signatures: Express.Multer.File[]) {
-  const deleteFiles = () => {
+  const deleteFiles = (files: string[]) => {
     try {
-      deleteFile(mainDocument.path);
-      signatures.forEach((signature) => {
-        deleteFile(signature.path);
+      files.forEach((file) => {
+        deleteFile(file);
       });
     } catch (error) {
       throw error;
@@ -19,11 +18,16 @@ async function convertDocToESD(mainDocument: Express.Multer.File, signatures: Ex
   };
 
   try {
+    const logFiles: string[] = [];
+
     const docData = arraybufferToBase64(readFile(mainDocument.path));
     const signaturesData: Signature[] = signatures.map((sign) => {
-      execAvCmUt4(mainDocument.path, sign.path);
+      const logFilepath = execAvCmUt4(mainDocument.path, sign.path);
+      logFiles.push(logFilepath as string);
 
-      const logData = arraybufferToString(readFile(`AvCmUt4.log`)).toString().split('\n');
+      const logData = arraybufferToString(readFile(logFilepath as string))
+        .toString()
+        .split('\n');
 
       const tmpDate = logData[9].split(': ')[1];
       const convertDate = tmpDate.split('.')[1] + '.' + tmpDate.split('.')[0] + '.' + tmpDate.split('.')[2];
@@ -48,7 +52,7 @@ async function convertDocToESD(mainDocument: Express.Multer.File, signatures: Ex
     const esdData = getESDContent(docData, signaturesData);
     const fileLink = createTempFileLink(process.env.STORAGE_PATH, 'esd', esdData);
 
-    deleteFiles();
+    deleteFiles([mainDocument.path, ...signatures.map((sign) => sign.path), ...logFiles]);
 
     return {
       signatures: signaturesData.map((signature) => {
